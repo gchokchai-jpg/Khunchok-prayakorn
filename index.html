@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="th">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#B8860B;--gold2:#DAA520;--gold3:#FFD700;--goldl:#FDF6E3;--goldb:#7B5900;
+  --pur:#3C3489;--purl:#EEEDFE;--purm:#7F77DD;--purd:#26215C;
+  --bg:#0D0A1A;--bg2:#140F2B;--bg3:#1C1535;--card:#1E1840;--border:#2D2660}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:#EEE;min-height:100vh;overflow-x:hidden}
+
+/* BG STARS */
+.stars-bg{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle var(--d,3s) ease-in-out infinite var(--dl,0s)}
+@keyframes twinkle{0%,100%{opacity:.1;transform:scale(1)}50%{opacity:.9;transform:scale(1.4)}}
+
+.wrap{position:relative;z-index:1;max-width:600px;margin:0 auto;padding:0 1rem 3rem}
+
+/* ═══ COVER ═══ */
+.cover{text-align:center;padding:2.5rem 1rem 1.5rem}
+.logo-ring{width:110px;height:110px;margin:0 auto 1rem;position:relative}
+.logo-ring svg{width:100%;height:100%;filter:drop-shadow(0 0 12px rgba(218,165,32,.5))}
+.app-name{font-size:28px;font-weight:700;letter-spacing:2px;
+  background:linear-gradient(135deg,#FFD700,#DAA520,#FFD700);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:4px}
+.app-sub{font-size:13px;color:#9990CC;letter-spacing:1px;margin-bottom:2px}
+.app-by{font-size:11px;color:#665599;font-style:italic}
+
+/* WARNING BOX */
+.warn-box{background:linear-gradient(135deg,#1a1228,#221840);border:1px solid var(--gold2);
+  border-radius:14px;padding:1.1rem 1.2rem;margin:1rem 0;text-align:left}
+.warn-title{font-size:13px;font-weight:700;color:var(--gold2);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.warn-txt{font-size:12.5px;color:#BBA;line-height:1.8}
+.warn-txt strong{color:var(--gold3);font-weight:700}
+
+/* DISCLAIMER small */
+.disc-sm{font-size:11px;color:#665;text-align:center;margin:6px 0 1rem;line-height:1.6}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.25rem;margin-bottom:1rem;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold2),transparent)}
+
+/* FORM */
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
+.fg label{display:block;font-size:11px;font-weight:700;color:#9990CC;letter-spacing:.8px;margin-bottom:5px;text-transform:uppercase}
+.fg input,.fg select{width:100%;padding:9px 10px;border:1px solid #2D2660;border-radius:8px;
+  font-size:14px;background:#110D26;color:#EEE;outline:none;transition:border-color .2s;font-family:'Sarabun',sans-serif}
+.fg input:focus,.fg select:focus{border-color:var(--gold2)}
+.fg select option{background:#110D26}
+
+/* NUM DISPLAY */
+.nums{display:flex;gap:8px;justify-content:center;margin:1rem 0;flex-wrap:wrap;align-items:center}
+.nb{width:46px;height:46px;border-radius:10px;border:1.5px solid #2D2660;background:#110D26;
+  display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;
+  color:#443;transition:all .4s}
+.nb.on{background:#1E1840;border-color:var(--gold2);color:var(--gold3);
+  box-shadow:0 0 10px rgba(218,165,32,.3);transform:scale(1.1)}
+.nsep{color:#443;font-size:18px}
+
+/* BTN */
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#0D0A1A;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;
+  letter-spacing:1px;font-family:'Sarabun',sans-serif;transition:all .2s;
+  box-shadow:0 4px 20px rgba(184,134,11,.4)}
+.btn:disabled{opacity:.3;cursor:not-allowed;box-shadow:none}
+.btn:not(:disabled):hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(218,165,32,.5)}
+.btn:not(:disabled):active{transform:scale(.98)}
+
+/* ═══ RESULT ═══ */
+.res{display:none}
+.res.on{display:block;animation:fadeUp .5s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* RESULT HERO */
+.res-hero{text-align:center;padding:1.25rem 0 1rem}
+.res-hero h2{font-size:22px;font-weight:700;
+  background:linear-gradient(135deg,#FFD700,#DAA520);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text}
+.res-hero p{font-size:13px;color:#9990CC;margin-top:4px}
+.level-badge{display:inline-block;margin-top:10px;padding:5px 18px;border-radius:20px;font-size:13px;font-weight:700}
+.b-good{background:rgba(100,200,100,.15);color:#7DDB7D;border:1px solid rgba(100,200,100,.3)}
+.b-mid{background:rgba(127,119,221,.15);color:#A9A3FF;border:1px solid rgba(127,119,221,.3)}
+.b-bad{background:rgba(220,80,80,.15);color:#FF9090;border:1px solid rgba(220,80,80,.3)}
+
+/* SECTION TITLE */
+.sec-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;
+  color:var(--gold2);letter-spacing:.8px;margin-bottom:10px;padding-bottom:8px;
+  border-bottom:1px solid rgba(184,134,11,.3)}
+
+/* STARS */
+.stars{color:var(--gold3);font-size:15px;letter-spacing:3px;margin-bottom:8px}
+
+/* PROPHECY TEXT */
+.proph{font-size:14.5px;color:#DDD;line-height:2;margin-bottom:0}
+.proph p{margin-bottom:10px}
+.proph p:last-child{margin-bottom:0}
+.highlight{color:var(--gold3);font-weight:600}
+
+/* SCORE BAR */
+.bar-row{display:flex;align-items:center;gap:8px;margin-top:10px}
+.bar-lbl{font-size:11px;color:#9990CC;white-space:nowrap;min-width:50px}
+.bar-bg{flex:1;height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:3px;
+  transition:width 1.3s cubic-bezier(.4,0,.2,1);width:0}
+
+/* DIVIDER */
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:1rem 0}
+
+/* LUCKY GRID */
+.lgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.lcell{aspect-ratio:1;border-radius:10px;border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;
+  transition:all .3s;position:relative}
+.lcell.has{background:linear-gradient(135deg,#1E1840,#2D2660);border-color:var(--gold2);
+  color:var(--gold3);box-shadow:0 0 10px rgba(218,165,32,.2);
+  animation:popIn .45s ease backwards}
+.lcell.mt{background:#100D20;color:#2D2660}
+@keyframes popIn{0%{transform:scale(.3) rotate(-15deg);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+
+/* TODAY BOX */
+.today-box{background:linear-gradient(135deg,#1a1228,#1E1840);border:1px solid rgba(184,134,11,.4);
+  border-radius:12px;padding:1rem 1.1rem;margin-bottom:10px}
+.today-tip{background:rgba(127,119,221,.08);border:1px solid rgba(127,119,221,.2);
+  border-radius:10px;padding:.9rem 1rem;margin-top:8px;font-size:13px;color:#A9A3FF;line-height:1.8}
+
+/* ABOUT */
+.about-box{background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:1.5rem;margin-top:1.5rem;text-align:center;position:relative;overflow:hidden}
+.about-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold2),transparent)}
+.about-avatar{width:70px;height:70px;margin:0 auto 10px}
+.about-avatar svg{width:100%;height:100%}
+.about-name{font-size:16px;font-weight:700;color:var(--gold2);margin-bottom:4px}
+.about-motto{font-size:14px;color:#A9A3FF;font-style:italic;line-height:1.8;
+  border-top:1px solid var(--border);padding-top:12px;margin-top:12px}
+.about-disc{font-size:12px;color:#665588;line-height:1.7;margin-top:10px}
+
+/* FOOTER ROW */
+.foot-row{display:flex;gap:10px;justify-content:center;margin-top:1rem;flex-wrap:wrap}
+.btn-gold{display:flex;align-items:center;gap:6px;padding:10px 20px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0D0A1A;
+  border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Sarabun',sans-serif}
+.btn-out{padding:9px 18px;background:transparent;border:1px solid #2D2660;
+  border-radius:10px;font-size:13px;color:#9990CC;cursor:pointer;font-family:'Sarabun',sans-serif;transition:all .2s}
+.btn-out:hover{border-color:var(--gold2);color:var(--gold2)}
+</style>
+</head>
+<body>
+
+<!-- STAR BG -->
+<div class="stars-bg" id="starbg"></div>
+
+<div class="wrap">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="logo-ring">
+      <svg viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="rg" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#2D2660"/>
+            <stop offset="100%" stop-color="#0D0A1A"/>
+          </radialGradient>
+        </defs>
+        <!-- Outer decorative ring -->
+        <circle cx="55" cy="55" r="52" fill="url(#rg)" stroke="#DAA520" stroke-width="1.5"/>
+        <circle cx="55" cy="55" r="46" fill="none" stroke="#DAA520" stroke-width=".6" stroke-dasharray="4 3"/>
+        <circle cx="55" cy="55" r="40" fill="none" stroke="#B8860B" stroke-width=".8"/>
+        <!-- 8-segment dividers -->
+        <line x1="55" y1="15" x2="55" y2="95" stroke="#DAA520" stroke-width=".7" opacity=".8"/>
+        <line x1="15" y1="55" x2="95" y2="55" stroke="#DAA520" stroke-width=".7" opacity=".8"/>
+        <line x1="27" y1="27" x2="83" y2="83" stroke="#DAA520" stroke-width=".7" opacity=".6"/>
+        <line x1="83" y1="27" x2="27" y2="83" stroke="#DAA520" stroke-width=".7" opacity=".6"/>
+        <!-- Center circle -->
+        <circle cx="55" cy="55" r="8" fill="none" stroke="#FFD700" stroke-width="1.2"/>
+        <circle cx="55" cy="55" r="3" fill="#FFD700"/>
+        <!-- Petal decorations on outer ring -->
+        <g stroke="#DAA520" stroke-width="1" fill="none" opacity=".7">
+          <path d="M55 5 Q58 10 55 15 Q52 10 55 5"/>
+          <path d="M55 95 Q58 100 55 105 Q52 100 55 95"/>
+          <path d="M5 55 Q10 58 15 55 Q10 52 5 55"/>
+          <path d="M95 55 Q100 58 105 55 Q100 52 95 55"/>
+          <path d="M18 18 Q22 21 18.5 24.5 Q15 21 18 18"/>
+          <path d="M92 18 Q96 21 91.5 24.5 Q88 21 92 18"/>
+          <path d="M18 92 Q22 89 18.5 85.5 Q15 89 18 92"/>
+          <path d="M92 92 Q96 89 91.5 85.5 Q88 89 92 92"/>
+        </g>
+        <!-- Stars at segment tips -->
+        <g fill="#FFD700" opacity=".8">
+          <polygon points="55,17 56.2,20.6 60,20.6 57,22.8 58.2,26.4 55,24.2 51.8,26.4 53,22.8 50,20.6 53.8,20.6" transform="scale(0.6) translate(37,-2)"/>
+        </g>
+      </svg>
+    </div>
+    <div class="app-name">ขุนโชคพยากรณ์</div>
+    <div class="app-sub">ศาสตร์แห่งตัวเลขและดวงชะตา</div>
+    <div class="app-by">เรียบเรียงคำทำนายโดย "ขุนโชค โหราธิบดี"</div>
+  </div>
+
+  <!-- INPUT SECTION -->
+  <div id="inp-sec">
+    <!-- คำเตือนสำคัญ -->
+    <div class="warn-box">
+      <div class="warn-title">🔮 ข้อความจากขุนโชค</div>
+      <div class="warn-txt">
+        คำทำนายจะ<strong>แม่นยำที่สุดในครั้งแรก</strong> และลดลงเรื่อยๆ หากดูบ่อยเกินไป<br>
+        ควรดู<strong>วันละครั้งเท่านั้น</strong><br><br>
+        ดังนั้น ขอให้<strong>ตั้งใจอธิษฐานในใจก่อน</strong> แล้วจึงขอคำทำนาย<br>
+        <strong>เพียงครั้งเดียวเท่านั้น</strong> จะดีที่สุด 🙏
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="frow">
+        <div class="fg"><label>ชื่อ (จริงหรือชื่อเล่น)</label>
+          <input id="iname" type="text" placeholder="เช่น มิ้นท์, สมชาย" oninput="chk()"></div>
+        <div class="fg"><label>เพศ</label>
+          <select id="igender" onchange="chk()">
+            <option value="">-- เลือก --</option>
+            <option>ชาย</option><option>หญิง</option><option>อื่นๆ</option>
+          </select></div>
+      </div>
+      <div class="frow3">
+        <div class="fg"><label>วันเกิด</label>
+          <select id="iday" onchange="upd()"><option value="">วัน</option></select></div>
+        <div class="fg"><label>เดือนเกิด</label>
+          <select id="imon" onchange="upd()"><option value="">เดือน</option></select></div>
+        <div class="fg"><label>ปีเกิด (พ.ศ.)</label>
+          <select id="iyr" onchange="upd()"><option value="">ปี</option></select></div>
+      </div>
+      <div class="nums">
+        <div class="nb" id="b0">?</div><div class="nb" id="b1">?</div>
+        <div class="nsep">·</div>
+        <div class="nb" id="b2">?</div><div class="nb" id="b3">?</div>
+        <div class="nsep">·</div>
+        <div class="nb" id="b4">?</div><div class="nb" id="b5">?</div>
+      </div>
+      <button class="btn" id="gobtn" onclick="go()" disabled>✦ ขอคำพยากรณ์จากขุนโชค ✦</button>
+    </div>
+    <div class="disc-sm">เนื้อหาเพื่อความบันเทิงเท่านั้น · ไม่ใช่คำพยากรณ์จริง</div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="res" id="res-sec">
+
+    <!-- HERO -->
+    <div class="card">
+      <div class="res-hero">
+        <h2 id="rname">—</h2>
+        <p id="rdetail">—</p>
+        <div id="rbadge" class="level-badge b-mid">—</div>
+      </div>
+
+      <!-- ═══ PROPHECY ALL-IN-ONE ═══ -->
+      <div class="sec-title">📜 คำพยากรณ์ประจำวัน</div>
+      <div class="stars" id="main-stars">★★★☆☆</div>
+
+      <!-- การเงิน -->
+      <div style="margin-bottom:14px">
+        <div style="font-size:11px;font-weight:700;color:var(--gold2);letter-spacing:.8px;margin-bottom:6px">💰 การเงิน & การงาน</div>
+        <div class="proph" id="p-work"></div>
+        <div class="bar-row"><div class="bar-lbl">ดวง</div><div class="bar-bg"><div class="bar-fill" id="bar-work"></div></div></div>
+      </div>
+      <div class="divider"></div>
+
+      <!-- สุขภาพ -->
+      <div style="margin-bottom:14px">
+        <div style="font-size:11px;font-weight:700;color:var(--gold2);letter-spacing:.8px;margin-bottom:6px">💚 สุขภาพ & พลังชีวิต</div>
+        <div class="proph" id="p-health"></div>
+        <div class="bar-row"><div class="bar-lbl">ดวง</div><div class="bar-bg"><div class="bar-fill" id="bar-health"></div></div></div>
+      </div>
+      <div class="divider"></div>
+
+      <!-- ความรัก -->
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--gold2);letter-spacing:.8px;margin-bottom:6px">❤️ ความรัก & ครอบครัว</div>
+        <div class="proph" id="p-love"></div>
+        <div class="bar-row"><div class="bar-lbl">ดวง</div><div class="bar-bg"><div class="bar-fill" id="bar-love"></div></div></div>
+      </div>
+    </div>
+
+    <!-- ═══ TODAY + LUCK ═══ -->
+    <div class="card">
+      <div class="sec-title">☀️ ดวงวันนี้</div>
+      <div id="p-today"></div>
+      <div class="divider"></div>
+      <div class="sec-title" style="margin-top:4px">⭐ โชคลาภ & เลขนำโชค</div>
+      <div class="proph" id="p-luck" style="margin-bottom:10px"></div>
+      <div style="font-size:11px;font-weight:700;color:var(--gold2);letter-spacing:.8px;margin-bottom:6px">🎰 ตารางเลขนำโชค</div>
+      <div class="lgrid" id="lucky-grid"></div>
+      <div style="font-size:11px;color:#443;margin-top:10px;line-height:1.6">⚠️ ขุนโชคไม่รับผิดชอบผลแพ้ชนะใดๆ — เพื่อความบันเทิงเท่านั้น</div>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="about-box">
+      <div class="about-avatar">
+        <svg viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="35" cy="35" r="33" fill="#1E1840" stroke="#DAA520" stroke-width="1.5"/>
+          <circle cx="35" cy="35" r="27" fill="none" stroke="#B8860B" stroke-width=".6" stroke-dasharray="3 2"/>
+          <line x1="35" y1="8" x2="35" y2="62" stroke="#DAA520" stroke-width=".6" opacity=".7"/>
+          <line x1="8" y1="35" x2="62" y2="35" stroke="#DAA520" stroke-width=".6" opacity=".7"/>
+          <line x1="16" y1="16" x2="54" y2="54" stroke="#DAA520" stroke-width=".6" opacity=".5"/>
+          <line x1="54" y1="16" x2="16" y2="54" stroke="#DAA520" stroke-width=".6" opacity=".5"/>
+          <circle cx="35" cy="35" r="5" fill="none" stroke="#FFD700" stroke-width="1"/>
+          <circle cx="35" cy="35" r="2" fill="#FFD700"/>
+        </svg>
+      </div>
+      <div class="about-name">ขุนโชค โหราธิบดี</div>
+      <div style="font-size:12px;color:#665588;margin-top:2px">เรียบเรียงคำทำนายโดย</div>
+      <div class="about-motto">
+        "ดีชั่วอยู่ที่ตัวลิขิต ดวงดาวหรือ? จะทำอะไรได้"
+      </div>
+      <div class="about-disc">
+        ⚠️ เนื้อหาทั้งหมดเป็นเพียงศาสตร์โหราศาสตร์เพื่อความบันเทิงเท่านั้น ไม่ใช่คำพยากรณ์จริง โปรดใช้วิจารณญาณในการรับชม ห้ามนำไปตัดสินใจเรื่องสำคัญในชีวิต
+      </div>
+    </div>
+
+    <div class="foot-row">
+      <button class="btn-gold" onclick="shareImg()">📸 แชร์ผลพยากรณ์</button>
+      <button class="btn-out" onclick="reset()">🔄 เริ่มใหม่</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+// ── STARS BG ──
+(function(){
+  var bg=document.getElementById('starbg');
+  for(var i=0;i<80;i++){
+    var s=document.createElement('div');s.className='star';
+    var sz=(Math.random()*2+.5).toFixed(1);
+    s.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;'
+      +'--d:'+(Math.random()*3+2).toFixed(1)+'s;--dl:'+(-Math.random()*4).toFixed(1)+'s';
+    bg.appendChild(s);
+  }
+})();
+
+var MN=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+var sd=document.getElementById('iday'),sm=document.getElementById('imon'),sy=document.getElementById('iyr');
+for(var d=1;d<=31;d++){sd.add(new Option(d,('0'+d).slice(-2)))}
+MN.forEach(function(m,i){sm.add(new Option(m,('0'+(i+1)).slice(-2)))});
+for(var y=2568;y>=2480;y--){sy.add(new Option(y,y))}
+
+function upd(){
+  var d=sd.value,mo=sm.value,yr=sy.value;
+  for(var i=0;i<6;i++){var b=document.getElementById('b'+i);b.textContent='?';b.classList.remove('on')}
+  if(!d||!mo||!yr)return;
+  var yrS=String(yr);
+  var digs=[d[0],d[1],mo[0],mo[1],yrS[2],yrS[3]];
+  digs.forEach(function(v,i){var b=document.getElementById('b'+i);b.textContent=v;setTimeout((function(bb){return function(){bb.classList.add('on')}})(b),i*80)});
+  chk();
+}
+function chk(){
+  var ok=document.getElementById('iname').value.trim()&&document.getElementById('igender').value&&sd.value&&sm.value&&sy.value;
+  document.getElementById('gobtn').disabled=!ok;
+}
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
+function st(n){return'★'.repeat(n)+'☆'.repeat(5-n)}
+function lvl(){var r=Math.random();return r<.10?'good':r<.90?'mid':'bad'}
+function ageG(yr){var a=2568-parseInt(yr);return a<=14?'kid':a<=25?'teen':a<=50?'work':'elder'}
+function tx(pool,lv,n){return pick(pool[lv]).replace(/\{n\}/g,'<span class="highlight">'+n+'</span>')}
+
+// ─── CONTENT POOLS (DOUBLE SIZE) ───
+var WORK={
+  good:[
+    '<p>{n} ช่วงนี้ดวงการงานพุ่งปรี๊ดราวกับจรวด NASA! โปรเจกต์ที่ค้างคามานานมีแนวโน้มสำเร็จสวยงาม บอสอาจเริ่มจับตามองและพิจารณาให้ความรับผิดชอบมากขึ้น</p><p>ด้านการเงิน {n} มีโอกาสรับเงินก้อนพิเศษ ไม่ว่าจะเป็นโบนัส ค่าล่วงเวลา หรือรายได้เสริมจากช่องทางที่ไม่คาดคิด เหมาะมากสำหรับการออมและลงทุนระยะยาว</p><p>ขุนโชคแนะนำว่า {n} ควรรีบลงมือทำสิ่งที่วางแผนไว้ เพราะดาวส่งเสริมอยู่ในช่วงนี้ อย่าผัดวันประกันพรุ่ง!</p>',
+    '<p>ดวงการงานของ {n} สว่างไสวเหมือนดาวเหนือในคืนฟ้าใส ผู้ใหญ่ให้ความไว้วางใจ เพื่อนร่วมงานให้ความร่วมมือ ทุกอย่างราบรื่นกว่าที่คิด</p><p>เรื่องการเงิน {n} มีดวงโชคพิเศษในการต่อรองและเจรจาธุรกิจ ดีลที่เคยดูยากอาจเปิดทางสำเร็จได้ในช่วงนี้ รายได้เพิ่มขึ้นอย่างมีนัยสำคัญ</p><p>ถ้า {n} มีแผนขอขึ้นเงินเดือนหรือเสนอไอเดียใหม่ — ช่วงนี้คือโอกาสทอง อย่าปล่อยให้ผ่านไปโดยเสียดาย!</p>',
+    '<p>{n} ช่วงนี้ทำงานอะไรก็ดูดีไปหมด ไอเดียใหม่ๆ ผุดขึ้นมาไม่ขาดสาย ความคิดสร้างสรรค์พุ่งพล่าน เพื่อนร่วมงานต่างทึ่งในฝีมือ</p><p>ด้านการเงิน {n} มีโอกาสพบแหล่งรายได้ใหม่ที่ไม่เคยคาดคิดมาก่อน อาจมาจากทักษะที่มีอยู่แต่ยังไม่ได้นำมาใช้ประโยชน์ เปิดใจรับโอกาสใหม่ๆ ได้เลย</p>'
+  ],
+  mid:[
+    '<p>{n} ช่วงนี้การงานเดินหน้าช้าๆ แต่มั่นคง ไม่มีอุปสรรคใหญ่ แค่ระวังการสื่อสารกับเพื่อนร่วมงานให้ชัดเจน เพราะความเข้าใจผิดเล็กน้อยอาจสร้างปัญหาได้</p><p>ด้านการเงิน {n} ควรประหยัดและวางแผนรายจ่ายให้รัดกุม ไม่ใช่เพราะจน — แต่เพราะขุนโชคบอกให้เก็บออมไว้รอโอกาสดีที่กำลังจะมาถึงในอีกไม่ช้า</p><p>หมั่นพัฒนาทักษะใหม่ๆ ไว้เถอะ {n} เพราะดาวกำลังเตรียมเปิดทางใหม่ให้อยู่เงียบๆ</p>',
+    '<p>การงานของ {n} ช่วงนี้สงบนิ่ง ไม่มีพายุใหญ่มาปั่นป่วน แต่ก็ไม่มีลมหนุนพิเศษ ทำงานตามหน้าที่ให้ดีที่สุดก็พอ อย่าคาดหวังมากเกินไปในระยะสั้นนี้</p><p>เรื่องเงินทอง {n} ควรระวังการใช้จ่ายตามอารมณ์ โดยเฉพาะการช้อปปิ้งออนไลน์ตอนดึก — ขุนโชคเห็นหมด! เก็บออมไว้ก่อนจะดีกว่านะ</p><p>{n} ลองมองหาโอกาสเสริมรายได้จากสิ่งที่ถนัดและชอบดูก็ได้ บางทีงานอดิเรกก็แปลงเป็นเงินได้นะ</p>',
+    '<p>{n} ช่วงนี้งานราบเรียบ ไม่มีดราม่า ไม่มีปาฏิหาริย์ แค่วันทำงานธรรมดาที่ดี ใครขอร้องให้ช่วยอะไรก็ช่วยได้ ดวงสังคมยังดีอยู่</p><p>ด้านการเงิน ควรทำบัญชีรายรับรายจ่ายให้ชัดเจน {n} อาจแปลกใจว่าเงินหายไปไหนบ้างในแต่ละเดือน การรู้ตัวเลขจริงๆ จะช่วยวางแผนได้ดีขึ้น</p>'
+  ],
+  bad:[
+    '<p>{n} ช่วงนี้การงานมีอุปสรรคเล็กน้อย อาจเจอสถานการณ์ที่ทำให้รู้สึกหงุดหงิดหรือไม่เป็นใจ ขอให้อดทนและใจเย็นไว้ก่อน อย่าตัดสินใจใหญ่ในช่วงนี้</p><p>เรื่องการเงิน {n} ต้องระวังมากเป็นพิเศษ หลีกเลี่ยงการลงทุนที่ไม่แน่ใจ และระวังคนที่มาขอยืมเงินหรือชวนทำธุรกิจด่วนๆ — ขุนโชคบอกว่าอย่าหลงเชื่อง่ายช่วงนี้</p><p>อย่าหมดกำลังใจนะ {n} พายุทุกลูกมีวันสงบ ดูแลตัวเองให้ดี แล้วโอกาสใหม่จะมาเอง</p>',
+    '<p>ช่วงนี้ {n} อาจรู้สึกว่างานไม่ค่อยไปไหน ความพยายามดูเหมือนไม่ได้รับการตอบแทนที่สมควร ขอให้เข้าใจว่านี่เป็นเพียงช่วงพักเพื่อสะสมพลัง ไม่ใช่การสิ้นสุด</p><p>ด้านการเงิน {n} ฝืดนิดๆ ระวังรายจ่ายที่ไม่จำเป็น เลื่อนการซื้อของใหญ่ๆ ออกไปก่อนได้ แล้วรอให้ดวงดีขึ้นจะดีกว่า</p><p>ขุนโชคแนะนำว่า ช่วงนี้ {n} เหมาะสำหรับการเรียนรู้สิ่งใหม่ มากกว่าการลงมือทำใหญ่โต</p>'
+  ]
+};
+
+var HEALTH={
+  good:[
+    '<p>{n} ช่วงนี้สุขภาพแข็งแรงเหมือนวัวกระทิง! พลังงานล้นเหลือ ร่างกายตอบสนองดี เหมาะมากสำหรับการเริ่มออกกำลังกายหรือเพิ่มความเข้มข้นของการฝึก</p><p>จิตใจ {n} ช่วงนี้แจ่มใส ความคิดบวก สมองทำงานได้คมชัด เหมาะสำหรับการเรียนรู้สิ่งใหม่ๆ หรือแก้ปัญหาที่ซับซ้อน</p><p>ขุนโชคแนะนำให้ {n} ดูแลสุขภาพอย่างสม่ำเสมอแม้ในยามดวงดี เพราะร่างกายที่แข็งแรงคือพื้นฐานของทุกความสำเร็จ</p>',
+    '<p>ร่างกายของ {n} ช่วงนี้อยู่ในโหมดพีค! หลับง่าย ตื่นสดชื่น กินอร่อย ย่อยดี ทุกระบบทำงานสอดประสานกันอย่างสมบูรณ์แบบ</p><p>พลังใจ {n} ก็เต็มเปี่ยม ความเครียดสะสมคลี่คลายลง จิตใจเบาสบาย ทำให้ตัดสินใจได้ดีและมีความสุขกับชีวิตมากขึ้น</p><p>ช่วงนี้เหมาะมากในการเริ่มต้นสิ่งใหม่ๆ ที่ต้องใช้ร่างกายและจิตใจ {n} ลองออกไปทำกิจกรรมกลางแจ้งดูสักครั้งสิ!</p>'
+  ],
+  mid:[
+    '<p>สุขภาพ {n} ช่วงนี้ปกติดีทั่วไป แต่ร่างกายอาจส่งสัญญาณเตือนเล็กๆ น้อยๆ เช่น เหนื่อยเร็วหน่อย หรือนอนหลับไม่ค่อยลึก ควรใส่ใจและพักผ่อนให้เพียงพอ</p><p>ด้านจิตใจ {n} อาจรู้สึกขึ้นๆ ลงๆ บ้าง แนะนำให้หากิจกรรมผ่อนคลายที่ชอบ ไม่ว่าจะเป็นดูซีรี่ส์ ฟังเพลง หรือนั่งสมาธิ เพื่อรีชาร์จพลังงานชีวิต</p><p>ขุนโชคย้ำว่า {n} ควรดื่มน้ำให้มากพอ กินผักผลไม้ และอย่าลืมออกกำลังกายแม้แต่เพียงเดิน 30 นาทีต่อวัน</p>',
+    '<p>{n} สุขภาพช่วงนี้ไม่ได้แย่ แต่ก็ไม่ได้ดีเด่นเป็นพิเศษ ร่างกายต้องการการดูแลสม่ำเสมอ อย่าปล่อยให้ความเครียดสะสมเพราะจะส่งผลต่อสุขภาพในระยะยาว</p><p>การพักผ่อนคือยาวิเศษของ {n} ในช่วงนี้ อย่าดึกเกินไป อย่าตื่นตีสี่เพื่อเช็คโซเชียล — ขุนโชครู้หมดนะ!</p><p>ลองเพิ่มอาหารที่มีประโยชน์และลดอาหารขยะดู {n} ร่างกายจะขอบคุณในระยะยาวอย่างแน่นอน</p>'
+  ],
+  bad:[
+    '<p>{n} ช่วงนี้ต้องระวังสุขภาพเป็นพิเศษ! อาจมีอาการเหนื่อยล้าง่าย ปวดเมื่อย หรือภูมิคุ้มกันต่ำลง ร่างกายกำลังส่งสัญญาณขอพักใหญ่แล้ว</p><p>ขุนโชคเป็นห่วง {n} มากช่วงนี้ อย่าฝืนร่างกายทำงานหนักเกินไป ถ้ามีอาการผิดปกติใดๆ ควรพบแพทย์ทันที อย่ากินยาเองเด็ดขาด!</p><p>จิตใจก็ต้องดูแลด้วยนะ {n} อย่าปล่อยให้ความกังวลกัดกินใจ ลองหาคนที่ไว้ใจคุยด้วยก็ได้ ปัญหาทุกอย่างดีขึ้นได้เสมอเมื่อมีคนรับฟัง</p>',
+    '<p>ช่วงนี้ร่างกาย {n} ต้องการการดูแลเป็นพิเศษ อาจเจอความเครียดสะสมที่แสดงออกทางร่างกาย เช่น ปวดหัว ปวดหลัง หรือนอนไม่หลับ</p><p>ขุนโชคแนะนำให้ {n} ลดกาแฟ เพิ่มน้ำเปล่า งดอาหารมันเยิ้ม และพยายามเข้านอนก่อนเที่ยงคืน ร่างกายจะขอบคุณแน่นอน</p><p>หากรู้สึกไม่สบายใจหรือซึมเศร้า อย่าเก็บไว้คนเดียวนะ {n} พูดคุยกับคนที่รักหรือผู้เชี่ยวชาญจะช่วยได้มาก</p>'
+  ]
+};
+
+var LOVE={
+  good:[
+    '<p>{n} ช่วงนี้ดวงความรักสว่างโชติช่วงราวกับดาวศุกร์โคจรมาใกล้! ถ้าโสดอยู่ มีโอกาสสูงมากที่จะได้เจอคนที่ตรงใจในสถานที่ที่ไม่คาดคิด เปิดใจรับได้เลย</p><p>ถ้า {n} มีคนรักแล้ว ความสัมพันธ์กำลังก้าวเข้าสู่ช่วงหวานชื่นเป็นพิเศษ อาจมีเรื่องราวสำคัญที่ยกระดับความสัมพันธ์ให้ลึกซึ้งยิ่งขึ้น</p><p>ด้านครอบครัว {n} บรรยากาศอบอุ่น ความรักและความเข้าใจกันในครอบครัวเพิ่มขึ้น เหมาะมากสำหรับการพูดคุยเรื่องสำคัญๆ ในบ้าน</p>',
+    '<p>ดวงรักของ {n} ช่วงนี้ปังมากกกก! พลังดึงดูดสูงผิดปกติ ใครอยู่ใกล้ก็รู้สึกได้ถึงเสน่ห์ที่แผ่ออกมา ทั้งชาย หญิง และคนทุกเพศต่างมอง</p><p>หากโสด {n} ควรออกไปพบปะผู้คนมากขึ้น เพราะโอกาสรักใหม่อยู่นอกบ้าน ไม่ใช่อยู่หน้าจอมือถือ! ลองออกไปทำกิจกรรมที่ชอบแล้วจะได้พบคนที่ใช่</p><p>ครอบครัวของ {n} ช่วงนี้อบอุ่น ลูกหลานน่ารัก ผู้ใหญ่เป็นที่พึ่งได้ บรรยากาศในบ้านดีเป็นพิเศษ ใช้เวลาร่วมกันให้คุ้มๆ เถอะ</p>'
+  ],
+  mid:[
+    '<p>{n} ดวงความรักช่วงนี้งั้นๆ ไม่ได้มีคนใหม่โผล่มาแบบอุ้มดอกไม้ยืนรออยู่หน้าบ้าน แต่ก็ไม่ได้มีปัญหาอะไรน่าเป็นห่วง รักษาสิ่งที่มีอยู่ให้ดีก็พอ</p><p>ถ้า {n} มีคนรัก ช่วงนี้เน้นการรับฟังกันมากกว่าพูด บางครั้งการเงียบแล้วฟังอีกฝ่ายพูดก็เป็นการแสดงความรักที่ดีที่สุด</p><p>ครอบครัวของ {n} ช่วงนี้ควรหาเวลาทำกิจกรรมร่วมกัน อาจเป็นแค่มื้ออาหารง่ายๆ ด้วยกัน แต่ความทรงจำดีๆ มักเกิดจากสิ่งเล็กๆ น้อยๆ แบบนี้เสมอ</p>',
+    '<p>ดวงรัก {n} ช่วงนี้ค่อยๆ เดิน ไม่ได้วิ่ง แต่ก็ไม่ได้หยุดนิ่ง สิ่งสำคัญคือการสื่อสารที่ดีและตรงไปตรงมากับคนที่รัก อย่าสะสมความรู้สึกไว้คนเดียว</p><p>สำหรับ {n} ที่โสดอยู่ ช่วงนี้อาจเป็นเวลาที่ดีในการรู้จักตัวเองให้มากขึ้น พัฒนาตัวเอง และรอโอกาสดีที่กำลังจะมา อย่าเร่งรีบในเรื่องหัวใจ</p><p>ด้านครอบครัว {n} อาจมีเรื่องให้ต้องพูดคุยกัน ใช้ความใจเย็นและความเข้าใจเป็นตัวนำ ทุกอย่างจะผ่านไปได้ด้วยดี</p>'
+  ],
+  bad:[
+    '<p>{n} ช่วงนี้ระวังเรื่องความเข้าใจผิดในความสัมพันธ์! สิ่งที่พูดออกไปอาจถูกตีความผิดได้ง่าย ควรเลือกคำพูดให้ระมัดระวัง และพยายามพูดคุยตรงๆ แทนการสื่อสารผ่านข้อความ</p><p>ถ้า {n} กำลังมีปัญหาความสัมพันธ์ ขุนโชคแนะนำให้หยุดพักความขัดแย้งก่อน แล้วค่อยๆ พูดคุยกันด้วยใจเย็น อย่าตัดสินใจใหญ่ๆ เรื่องความรักในช่วงนี้</p><p>ครอบครัว {n} อาจมีเรื่องกระทบกระทั่งเล็กน้อย อดทนและให้เกียรติกัน บางทีการก้มหัวก่อนไม่ใช่การแพ้ แต่คือความฉลาดทางอารมณ์</p>',
+    '<p>ช่วงนี้ {n} อาจรู้สึกโดดเดี่ยวหรือว่าเปล่าในด้านความรักบ้าง แต่อย่าเพิ่งหมดหวัง — ดวงดาวทุกดวงมีคืนที่สว่างไสว แค่รอให้ถึงเวลา</p><p>สำหรับ {n} ที่มีคนรัก ระวังอย่าเอาเรื่องงานหรือความเครียดมาระบายใส่คนที่รัก แยกแยะเรื่องให้ดี และอย่าลืมบอกรักกันบ้างนะ</p><p>ด้านครอบครัว {n} ควรเพิ่มความอดทนและความเห็นอกเห็นใจ บางครั้งคนที่เรารักก็มีวันแย่เหมือนกัน</p>'
+  ]
+};
+
+var TODAY={
+  good:{
+    kid:['<p>{n} วันนี้ดวงดีสุดๆ เหมือนจักรวาลพยักหน้าให้! ครูไม่เรียกตอบ อาจได้คะแนนดีที่ไม่คาดคิด เพื่อนซี้แชร์อะไรให้ก็อาจเกิดขึ้น วันนี้ให้ยิ้มให้มากๆ ไว้นะ</p><p>ขุนโชคแนะนำว่าวันนี้เป็นวันดีของ {n} ให้ลองทำสิ่งที่กลัวหรือลังเลมานาน เพราะดาวกำลังช่วยหนุนอยู่ 🌟</p>',
+     '<p>{n} วันนี้โชคดีมาก! ดวงดาวส่งพลังงานบวกมาให้ตลอดวัน สิ่งที่ขอหรืออธิษฐานไว้อาจได้รับการตอบสนองในเร็ววัน</p>'],
+    teen:['<p>โอ้โห {n} วันนี้ดวงปัง! พลังงานดีมาก รูปที่โพสต์วันนี้อาจได้ like เยอะเป็นพิเศษ และถ้ามีคนที่แอบชอบอยู่ ก็ให้รู้ไว้ว่าเขาอาจกำลังคิดถึงคุณอยู่ตอนนี้เลย!</p><p>ขุนโชคบอกว่า {n} ควรออกไปพบปะผู้คน วันนี้เหมาะมากสำหรับการสร้างความสัมพันธ์ใหม่ๆ ทั้งเพื่อนและความรัก</p>',
+           '<p>{n} วันนี้ดวงร้อนแรงเหมือนซีซั่นใหม่ที่รอคอยมานาน! ทุกอย่างที่ลงมือทำดูดีไปหมด ความมั่นใจพุ่ง พลังงานเต็ม วันนี้คือวันของคุณ!</p>'],
+    work:['<p>คุณ {n} วันนี้ดวงงานพุ่งปรี๊ด! บอสอาจเห็นฝีมือและพิจารณาให้โอกาสพิเศษ โปรเจกต์ที่ค้างอยู่ปิดได้เลยวันนี้ อย่าเสียโอกาสทองนี้</p><p>ด้านสังคม {n} วันนี้มีเสน่ห์ผิดปกติ การพูดคุยและเจรจาต่างๆ ราบรื่นเป็นพิเศษ เหมาะมากสำหรับการนัดหมายสำคัญ</p>',
+           '<p>วันนี้ {n} เงินทองไหลมาเทมา! อาจได้รับข่าวดีเรื่องการเงินที่รอคอยมานาน หรือมีโอกาสพิเศษที่ไม่ควรพลาด ตาตื่นหูไวไว้ดีกว่า</p>'],
+    elder:['<p>{n} วันนี้ดวงดีมาก ร่างกายกระปรี้กระเปร่าน่าดูใจ! ลูกหลานอาจโทรมาเยี่ยมหรือมีข่าวดีจากคนที่รัก บรรยากาศในบ้านอบอุ่นเป็นพิเศษ</p><p>ขุนโชคแนะนำให้ {n} ออกไปรับอากาศสดชื่นหน่อย จะเป็นสวน ตลาด หรือวัด ล้วนดีทั้งนั้น วันนี้ดวงเดินทางแบบสั้นๆ ดีมาก</p>']
+  },
+  mid:{
+    kid:['{n} วันนี้ดวงงั้นๆ เรียนก็งั้น เล่นก็งั้น ไม่มีอะไรเลวร้าย แค่ระวังทะเลาะกับเพื่อนเรื่องเล็กน้อย กินข้าวให้ครบมื้อแล้วจะยิ้มออกเอง 😊',
+         '<p>{n} วันนี้ผ่านไปได้ ไม่ดราม่า ไม่ปาฏิหาริย์ แค่วันธรรมดาที่ดี ขุนโชคบอกว่าวันธรรมดาที่มีความสุขเล็กๆ น้อยๆ มีค่ามากกว่าที่คิด</p>'],
+    teen:['<p>วันนี้ {n} ดวงกลางๆ ไม่ได้แย่ แต่ก็ไม่ได้ปัง อย่าตั้งความหวังสูงเกินไป แต่ใช้ชีวิตตามปกติได้เต็มๆ วันนี้เหมาะสำหรับการนอนพักและรีชาร์จพลังงาน</p><p>ขุนโชคบอกว่า {n} ลองวางมือถือสักชั่วโมงแล้วลองทำอะไรที่ชอบ — จะรู้สึกดีขึ้นอย่างน่าประหลาดใจ</p>',
+           '<p>{n} วันนี้อาจรู้สึกล้าหน่อย แต่ถ้าพักผ่อนให้พอ ตอนเย็นดวงกลับมาดีขึ้น แล้วค่อยออกไปเจอโลกก็ได้ ไม่ต้องรีบ</p>'],
+    work:['<p>คุณ {n} วันนี้ดวงเรื่อยๆ งานเดินหน้าช้าๆ อย่าเร่งรีบ ใช้ความระมัดระวังในการพูดจา โดยเฉพาะกับเพื่อนร่วมงานหรือลูกค้า</p><p>เย็นนี้ {n} ควรพักผ่อนให้เต็มที่ อย่าเอางานกลับบ้านมาคิดมาก สมองต้องการพักบ้างนะ</p>',
+           '<p>วันนี้ {n} ดวงกลางๆ เรื่องเงินไม่ได้ดีไม่ได้แย่ ระวังการใช้จ่ายฟุ่มเฟือย ร้านชาบูรอได้ก่อนนะ! 😅</p>'],
+    elder:['<p>{n} วันนี้ดวงปกติดี ควรพักผ่อนให้เพียงพอ อย่าเครียดกับเรื่องลูกหลานมากเกินไป เขาจะหาทางของตัวเองได้</p><p>ขุนโชคแนะนำให้ {n} ทานอาหารที่มีประโยชน์ ออกเดินช้าๆ และสูดอากาศบริสุทธิ์ รับรองว่าวันนี้จะดีขึ้นแน่นอน</p>']
+  },
+  bad:{
+    kid:['{n} วันนี้ดวงแย่นิดนึง ระวังการบ้านหาย กระเป๋าหาย หรือโดนครูถาม 😂 แต่ไม่เป็นไร พรุ่งนี้ดีขึ้นแน่นอน! ขุนโชครับรอง',
+         '<p>{n} วันนี้อาจเจอเรื่องซวยเล็กน้อย แต่ขุนโชคบอกว่า ถ้ากินข้าวครบมื้อ ดวงจะดีขึ้นนะ (จริงๆ นะ ไม่ได้แกล้ง!)</p>'],
+    teen:['<p>โห {n} วันนี้ดวงฝืดนิดนึง ระวังพูดอะไรไปแล้วคนเข้าใจผิด ควรอธิบายให้ชัดๆ และอย่าใช้ sticker หัวใจแทนคำพูดสำคัญๆ 555</p><p>วันนี้ {n} อาจรู้สึกไม่ค่อยดีเรื่องหัวใจ แต่อย่าเครียด ดราม่าทุกอย่างมีวันจบเสมอ แค่หายใจลึกๆ แล้วก็ผ่านไปได้</p>',
+           '<p>{n} วันนี้ขุนโชคบอกให้ระวังปาก ระวังเรื่อง และระวังมือที่จะไปกด send ข้อความแบบหุนหันพลันแล่น — อ่านซ้ำสองรอบก่อนส่งเสมอ!</p>'],
+    work:['<p>คุณ {n} วันนี้ระวังไว้เลย อาจเจอปัญหาเล็กน้อยกับงาน ไม่ควรรีบตัดสินใจใหญ่วันนี้ ใจเย็นไว้ก่อน</p><p>วันนี้ {n} ดวงการเงินฝืดนิดๆ ระวังค่าใช้จ่ายที่ไม่จำเป็น — แอปช้อปออนไลน์ปิดไว้ก่อนนะ! 🙈</p>',
+           '<p>{n} วันนี้อาจรู้สึกอ่อนเพลียหรือท้อแท้กับงานบ้าง แต่ขุนโชคบอกว่านี่เป็นแค่ช่วงพักใจ ไม่ใช่ทางตัน วันพรุ่งนี้จะดีกว่านี้</p>'],
+    elder:['<p>{n} วันนี้ดวงไม่ค่อยเป็นใจ ระวังสุขภาพ อย่าฝืนทำอะไรมาก พักผ่อนให้พอ ขุนโชคเป็นห่วงมาก 🙏</p><p>วันนี้ {n} ไม่ควรเดินทางไกลหรือทำกิจกรรมที่ใช้แรงมาก นั่งพักในที่ร่ม ดื่มน้ำบ่อยๆ แล้วจะดีขึ้นเอง</p>']
+  }
+};
+
+var LUCK={
+  good:['<p>{n} โชคลาภกำลังมาเยือน! ดวงดาวเปิดประตูให้โชคใหญ่ในช่วงนี้ ทุกอย่างที่ลุ้นไว้มีโอกาสสำเร็จมากกว่าปกติ</p><p>ขุนโชคบอกว่า {n} สามารถลุ้นโชคเล็กๆ น้อยๆ ได้บ้าง แต่ขอให้อยู่ในขอบเขตที่พอดี ไม่เสี่ยงเกินตัว ขอให้โชคดีทุกเรื่อง! 🌟</p>',
+        '<p>ดวงโชค {n} ช่วงนี้สว่างเป็นพิเศษ! อาจมีสิ่งดีๆ ที่ไม่คาดคิดโผล่มาทักทาย ไม่ว่าจะเป็นข่าวดี ของขวัญ หรือโอกาสพิเศษ</p><p>ตัวเลขนำโชคของ {n} วันนี้มีพลังสูง ขุนโชคสุ่มเสี่ยงมาให้อย่างระมัดระวัง — ใช้อย่างฉลาดและรับผิดชอบนะ 🎰</p>'],
+  mid:['<p>{n} โชคลาภพอมีบ้าง แต่ไม่มากนัก ลุ้นได้แต่อย่าหวังสูงเกินไป ทำบุญไว้บ้างก็ดีช่วยเสริมดวง</p><p>ขุนโชคบอกว่า {n} ถ้าอยากให้โชคดีขึ้น ลองให้น้ำใจกับคนรอบข้างดู — บุญนำโชคมาให้แน่นอน</p>',
+       '<p>ดวงโชค {n} ปกติ ไม่ได้ซวยแต่ก็ไม่ได้โชคใหญ่ ลองเสี่ยงได้เล็กน้อยแต่อย่าเสี่ยงมาก เก็บออมไว้ก่อนจะดีกว่า</p><p>ตัวเลขจากขุนโชควันนี้ เอาไปลุ้นเพื่อความสนุกและบันเทิงได้เลย — อย่าลืมว่าเป็นแค่เกมนะ! 😄</p>'],
+  bad:['<p>{n} ช่วงนี้โชคลาภซบเซา ระวังอย่าเสี่ยงโชคใหญ่ในช่วงนี้ ขุนโชคแนะนำให้รอจังหวะที่ดีกว่าก่อน</p><p>แทนที่จะเสี่ยงดวง {n} ลองนำเงินนั้นไปทำบุญหรือเก็บออมดูก็ได้ บุญที่สร้างวันนี้จะเปลี่ยนดวงในอนาคต</p>',
+       '<p>ดวงโชค {n} ไม่ค่อยเข้าข้างช่วงนี้ งดเสี่ยงดวงไว้ก่อน ขุนโชคบอกตรงๆ ว่าอย่าเพิ่งลงทุนหรือเสี่ยงอะไรใหญ่ๆ ในช่วงนี้เลย</p><p>แต่ไม่เป็นไรนะ {n} ดวงชั่วดีสลับกันไปเสมอ แค่รอและเตรียมตัวให้พร้อม เมื่อโชคมาจะได้คว้าไว้ได้ทัน! 💪</p>']
+};
+
+function luckyGrid(){
+  var cells=[];
+  for(var i=0;i<9;i++){cells.push(Math.random()<.5?null:Math.floor(Math.random()*10))}
+  var cnt=cells.filter(function(c){return c!==null}).length;
+  if(cnt<5){var need=5-cnt;for(var i=0;i<9&&need>0;i++){if(cells[i]===null){cells[i]=Math.floor(Math.random()*10);need--}}}
+  return cells;
+}
+
+function go(){
+  var name=document.getElementById('iname').value.trim();
+  var yr=sy.value,d=sd.value,mo=sm.value;
+  var digs=[d[0],d[1],mo[0],mo[1],String(yr)[2],String(yr)[3]];
+  var lv=lvl();
+  var ag=ageG(yr);
+  var scMap={good:5,mid:pick([3,4]),bad:pick([1,2])};
+  var sc=scMap[lv];
+  var badgeL={good:'ดวงดีมาก ✨',mid:'ดวงปานกลาง 🌤',bad:'ดวงฝืด ☁️'};
+  var badgeC={good:'b-good',mid:'b-mid',bad:'b-bad'};
+
+  document.getElementById('rname').textContent='คุณ'+name;
+  document.getElementById('rdetail').textContent='วันที่ '+parseInt(d)+' '+MN[parseInt(mo)-1]+' พ.ศ. '+yr+' · เลข: '+digs.join(' ');
+  var b=document.getElementById('rbadge');b.textContent=badgeL[lv];b.className='level-badge '+badgeC[lv];
+  document.getElementById('main-stars').textContent=st(sc);
+
+  function rpl(s){return s.replace(/\{n\}/g,'<span class="highlight">'+name+'</span>')}
+
+  // WORK
+  document.getElementById('p-work').innerHTML=rpl(pick(WORK[lv]));
+  document.getElementById('bar-work').setAttribute('data-w',sc*20);
+
+  // HEALTH
+  document.getElementById('p-health').innerHTML=rpl(pick(HEALTH[lv]));
+  document.getElementById('bar-health').setAttribute('data-w',sc*20);
+
+  // LOVE
+  document.getElementById('p-love').innerHTML=rpl(pick(LOVE[lv]));
+  document.getElementById('bar-love').setAttribute('data-w',sc*20);
+
+  // TODAY
+  var todayPool=TODAY[lv][ag]||TODAY[lv].work;
+  var todayTxt=rpl(pick(Array.isArray(todayPool)?todayPool:[todayPool]));
+  document.getElementById('p-today').innerHTML='<div class="today-box">'+todayTxt+'</div>';
+
+  // LUCK
+  document.getElementById('p-luck').innerHTML=rpl(pick(LUCK[lv]));
+
+  // LUCKY GRID
+  var grid=luckyGrid();
+  document.getElementById('lucky-grid').innerHTML=grid.map(function(v,i){
+    var dl=(i*.07).toFixed(2);
+    if(v===null)return'<div class="lcell mt">—</div>';
+    return'<div class="lcell has" style="animation-delay:'+dl+'s">'+v+'</div>';
+  }).join('');
+
+  document.getElementById('inp-sec').style.display='none';
+  document.getElementById('res-sec').classList.add('on');
+
+  setTimeout(function(){
+    document.querySelectorAll('.bar-fill[data-w]').forEach(function(el){
+      el.style.width=el.getAttribute('data-w')+'%';
+    });
+  },400);
+}
+
+function reset(){
+  document.getElementById('res-sec').classList.remove('on');
+  document.getElementById('inp-sec').style.display='';
+  document.getElementById('iname').value='';
+  document.getElementById('igender').value='';
+  sd.value='';sm.value='';sy.value='';
+  for(var i=0;i<6;i++){var b=document.getElementById('b'+i);b.textContent='?';b.classList.remove('on')}
+  document.getElementById('gobtn').disabled=true;
+}
+
+function shareImg(){
+  var el=document.getElementById('res-sec');
+  if(typeof html2canvas==='undefined'){alert('กำลังโหลด กรุณาลองอีกครั้ง');return}
+  html2canvas(el,{backgroundColor:'#0D0A1A',scale:2,useCORS:true,logging:false}).then(function(c){
+    var a=document.createElement('a');a.download='khunchok-prayakorn.png';a.href=c.toDataURL('image/png');a.click();
+  }).catch(function(){alert('ไม่สามารถบันทึกภาพได้ — ลอง Screenshot แทนได้เลยครับ')});
+}
+</script>
+</body>
+</html>
