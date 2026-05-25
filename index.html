@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="th">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ขุนโชคพยากรณ์</title>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -35,6 +36,211 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:#EEE;min-height
 .nsep{color:#443;font-size:18px}
 .btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0D0A1A;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;letter-spacing:1px;font-family:'Sarabun',sans-serif;transition:all .2s;box-shadow:0 4px 20px rgba(184,134,11,.4)}
 .btn:disabled{opacity:.3;cursor:not-allowed;box-shadow:none}
+.btn:not(:disabled):hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(218,165,32,.5)}
+.btn:not(:disabled):active{transform:scale(.98)}
+.res{display:none}
+.res.on{display:block;animation:fadeUp .5s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.res-hero{text-align:center;padding:1.25rem 0 1rem}
+.res-hero h2{font-size:22px;font-weight:700;background:linear-gradient(135deg,#FFD700,#DAA520);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.res-hero p{font-size:13px;color:#9990CC;margin-top:4px}
+.level-badge{display:inline-block;margin-top:10px;padding:5px 18px;border-radius:20px;font-size:13px;font-weight:700}
+.b-good{background:rgba(100,200,100,.15);color:#7DDB7D;border:1px solid rgba(100,200,100,.3)}
+.b-mid{background:rgba(127,119,221,.15);color:#A9A3FF;border:1px solid rgba(127,119,221,.3)}
+.b-bad{background:rgba(220,80,80,.15);color:#FF9090;border:1px solid rgba(220,80,80,.3)}
+.sec-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--gold2);letter-spacing:.8px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(184,134,11,.3)}
+.stars{color:var(--gold3);font-size:15px;letter-spacing:3px;margin-bottom:8px}
+.proph{font-size:14.5px;color:#DDD;line-height:2;margin-bottom:0}
+.proph p{margin-bottom:10px}
+.proph p:last-child{margin-bottom:0}
+.highlight{color:var(--gold3);font-weight:600}
+.bar-row{display:flex;align-items:center;gap:8px;margin-top:10px}
+.bar-lbl{font-size:11px;color:#9990CC;white-space:nowrap;min-width:50px}
+.bar-bg{flex:1;height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:3px;transition:width 1.3s cubic-bezier(.4,0,.2,1);width:0}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:1rem 0}
+.lgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.lcell{aspect-ratio:1;border-radius:10px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;transition:all .3s}
+.lcell.has{background:linear-gradient(135deg,#1E1840,#2D2660);border-color:var(--gold2);color:var(--gold3);box-shadow:0 0 10px rgba(218,165,32,.2);animation:popIn .45s ease backwards}
+.lcell.mt{background:#100D20;color:#2D2660}
+@keyframes popIn{0%{transform:scale(.3) rotate(-15deg);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+.today-box{background:linear-gradient(135deg,#1a1228,#1E1840);border:1px solid rgba(184,134,11,.4);border-radius:12px;padding:1rem 1.1rem;margin-bottom:10px}
+.about-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:1.5rem;text-align:center;position:relative;overflow:hidden}
+.about-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold2),transparent)}
+.about-avatar{width:70px;height:70px;margin:0 auto 10px}
+.about-name{font-size:16px;font-weight:700;color:var(--gold2);margin-bottom:4px}
+.about-motto{font-size:14px;color:#A9A3FF;font-style:italic;line-height:1.8;border-top:1px solid var(--border);padding-top:12px;margin-top:12px}
+.about-disc{font-size:12px;color:#665588;line-height:1.7;margin-top:10px}
+.foot-row{display:flex;gap:10px;justify-content:center;margin-top:1rem;flex-wrap:wrap}
+.btn-gold{display:flex;align-items:center;gap:6px;padding:10px 20px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0D0A1A;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Sarabun',sans-serif}
+.btn-out{padding:9px 18px;background:transparent;border:1px solid #2D2660;border-radius:10px;font-size:13px;color:#9990CC;cursor:pointer;font-family:'Sarabun',sans-serif;transition:all .2s}
+.btn-out:hover{border-color:var(--gold2);color:var(--gold2)}
+</style>
+</head>
+<body>
+<div class="stars-bg" id="starbg"></div>
+<div class="wrap">
+  <div class="cover">
+    <div class="logo-ring">
+      <svg viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+        <defs><radialGradient id="rg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#2D2660"/><stop offset="100%" stop-color="#0D0A1A"/></radialGradient></defs>
+        <circle cx="55" cy="55" r="52" fill="url(#rg)" stroke="#DAA520" stroke-width="1.5"/>
+        <circle cx="55" cy="55" r="46" fill="none" stroke="#DAA520" stroke-width=".6" stroke-dasharray="4 3"/>
+        <circle cx="55" cy="55" r="40" fill="none" stroke="#B8860B" stroke-width=".8"/>
+        <line x1="55" y1="15" x2="55" y2="95" stroke="#DAA520" stroke-width=".7" opacity=".8"/>
+        <line x1="15" y1="55" x2="95" y2="55" stroke="#DAA520" stroke-width=".7" opacity=".8"/>
+        <line x1="27" y1="27" x2="83" y2="83" stroke="#DAA520" stroke-width=".7" opacity=".6"/>
+        <line x1="83" y1="27" x2="27" y2="83" stroke="#DAA520" stroke-width=".7" opacity=".6"/>
+        <circle cx="55" cy="55" r="8" fill="none" stroke="#FFD700" stroke-width="1.2"/>
+        <circle cx="55" cy="55" r="3" fill="#FFD700"/>
+        <g stroke="#DAA520" stroke-width="1" fill="none" opacity=".7">
+          <path d="M55 5 Q58 10 55 15 Q52 10 55 5"/><path d="M55 95 Q58 100 55 105 Q52 100 55 95"/>
+          <path d="M5 55 Q10 58 15 55 Q10 52 5 55"/><path d="M95 55 Q100 58 105 55 Q100 52 95 55"/>
+          <path d="M18 18 Q22 21 18.5 24.5 Q15 21 18 18"/><path d="M92 18 Q96 21 91.5 24.5 Q88 21 92 18"/>
+          <path d="M18 92 Q22 89 18.5 85.5 Q15 89 18 92"/><path d="M92 92 Q96 89 91.5 85.5 Q88 89 92 92"/>
+        </g>
+      </svg>
+    </div>
+    <div class="app-name">ขุนโชคพยากรณ์</div>
+    <div class="app-sub">ศาสตร์แห่งตัวเลขและดวงชะตา</div>
+    <div class="app-by">เรียบเรียงคำทำนายโดย "ขุนโชค โหราธิบดี"</div>
+  </div>
+
+  <div id="inp-sec">
+    <div class="warn-box">
+      <div class="warn-title">🔮 ข้อความจากขุนโชค</div>
+      <div class="warn-txt">คำทำนายจะ<strong>แม่นยำที่สุดในครั้งแรก</strong> และลดลงเรื่อยๆ หากดูบ่อยเกินไป ควรดู<strong>วันละครั้งเท่านั้น</strong><br><br>ขอให้<strong>ตั้งใจอธิษฐานในใจก่อน</strong> แล้วจึงขอคำทำนาย<strong>เพียงครั้งเดียวเท่านั้น</strong> จะดีที่สุด 🙏</div>
+    </div>
+    <div class="card">
+      <div class="frow">
+        <div class="fg"><label>ชื่อ (จริงหรือชื่อเล่น)</label><input id="iname" type="text" placeholder="เช่น มิ้นท์, สมชาย" oninput="chk()"></div>
+        <div class="fg"><label>เพศ</label><select id="igender" onchange="chk()"><option value="">-- เลือก --</option><option>ชาย</option><option>หญิง</option><option>อื่นๆ</option></select></div>
+      </div>
+      <div class="frow3">
+        <div class="fg"><label>วันเกิด</label><select id="iday" onchange="upd()"><option value="">วัน</option></select></div>
+        <div class="fg"><label>เดือนเกิด</label><select id="imon" onchange="upd()"><option value="">เดือน</option></select></div>
+        <div class="fg"><label>ปีเกิด (พ.ศ.)</label><select id="iyr" onchange="upd()"><option value="">ปี</option></select></div>
+      </div>
+      <div class="nums">
+        <div class="nb" id="b0">?</div><div class="nb" id="b1">?</div><div class="nsep">·</div>
+        <div class="nb" id="b2">?</div><div class="nb" id="b3">?</div><div class="nsep">·</div>
+        <div class="nb" id="b4">?</div><div class="nb" id="b5">?</div>
+      </div>
+      <button class="btn" id="gobtn" onclick="go()" disabled>✦ ขอคำพยากรณ์จากขุนโชค ✦</button>
+    </div>
+    <div class="disc-sm">เนื้อหาเพื่อความบันเทิงเท่านั้น · ไม่ใช่คำพยากรณ์จริง</div>
+  </div>
+
+  <div class="res" id="res-sec">
+    <div class="card">
+      <div class="res-hero">
+        <h2 id="rname">—</h2><p id="rdetail">—</p>
+        <div id="rbadge" class="level-badge b-mid">—</div>
+      </div>
+      <div class="sec-title">📜 คำพยากรณ์ประจำวัน</div>
+      <div class="stars" id="main-stars">★★★☆☆</div>
+      <div style="margin-bottom:14px">
+        <div style="font-size:11px;font-weight:700;color:var(--gold2);letter-spacing:.8px;margin-bottom:6px">💰 การเงิน &amp; การงาน</div>
+        <div class="proph" id="p-work"></div>
+        <div class="bar-row"><div class="bar-lbl">ดวง</div><div class="bar-bg"><div class="bar-fill" id="bar-work"></div></div></div>
+      </div>
+      <div class="divider"></div>
+      <div style="margin-bottom:14px">
+        <div style="font-size:11px;font-weight:700;color:var(--gold2);letter-spacing:.8px;margin-bottom:6px">💚 สุขภาพ &amp; พลังชีวิต</div>
+        <div class="proph" id="p-health"></div>
+        <div class="bar-row"><div class="bar-lbl">ดวง</div><div class="bar-bg"><div class="bar-fill" id="bar-health"></div></div></div>
+      </div>
+      <div class="divider"></div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--gold2);letter-spacing:.8px;margin-bottom:6px">❤️ ความรัก &amp; ครอบครัว</div>
+        <div class="proph" id="p-love"></div>
+        <div class="bar-row"><div class="bar-lbl">ดวง</div><div class="bar-bg"><div class="bar-fill" id="bar-love"></div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec-title">☀️ ดวงวันนี้</div>
+      <div id="p-today"></div>
+      <div class="divider"></div>
+      <div class="sec-title" style="margin-top:4px">⭐ โชคลาภ &amp; เลขนำโชค</div>
+      <div class="proph" id="p-luck" style="margin-bottom:10px"></div>
+      <div style="font-size:11px;font-weight:700;color:var(--gold2);letter-spacing:.8px;margin-bottom:6px">🎰 ตารางเลขนำโชค</div>
+      <div class="lgrid" id="lucky-grid"></div>
+      <div style="font-size:11px;color:#443;margin-top:10px;line-height:1.6">⚠️ ขุนโชคไม่รับผิดชอบผลแพ้ชนะใดๆ — เพื่อความบันเทิงเท่านั้น</div>
+    </div>
+    <div class="about-box">
+      <div class="about-avatar">
+        <svg viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="35" cy="35" r="33" fill="#1E1840" stroke="#DAA520" stroke-width="1.5"/>
+          <circle cx="35" cy="35" r="27" fill="none" stroke="#B8860B" stroke-width=".6" stroke-dasharray="3 2"/>
+          <line x1="35" y1="8" x2="35" y2="62" stroke="#DAA520" stroke-width=".6" opacity=".7"/>
+          <line x1="8" y1="35" x2="62" y2="35" stroke="#DAA520" stroke-width=".6" opacity=".7"/>
+          <line x1="16" y1="16" x2="54" y2="54" stroke="#DAA520" stroke-width=".6" opacity=".5"/>
+          <line x1="54" y1="16" x2="16" y2="54" stroke="#DAA520" stroke-width=".6" opacity=".5"/>
+          <circle cx="35" cy="35" r="5" fill="none" stroke="#FFD700" stroke-width="1"/>
+          <circle cx="35" cy="35" r="2" fill="#FFD700"/>
+        </svg>
+      </div>
+      <div class="about-name">ขุนโชค โหราธิบดี</div>
+      <div style="font-size:12px;color:#665588;margin-top:2px">เรียบเรียงคำทำนายโดย</div>
+      <div class="about-motto">"ดีชั่วอยู่ที่ตัวลิขิต ดวงดาวหรือ? จะทำอะไรได้"</div>
+      <div class="about-disc">⚠️ เนื้อหาทั้งหมดเป็นเพียงศาสตร์โหราศาสตร์เพื่อความบันเทิงเท่านั้น ไม่ใช่คำพยากรณ์จริง โปรดใช้วิจารณญาณในการรับชม ห้ามนำไปตัดสินใจเรื่องสำคัญในชีวิต</div>
+    </div>
+    <div class="foot-row">
+      <button class="btn-gold" onclick="shareImg()">📸 แชร์ผลพยากรณ์</button>
+      <button class="btn-out" onclick="reset()">🔄 เริ่มใหม่</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+(function(){var bg=document.getElementById('starbg');for(var i=0;i<80;i++){var s=document.createElement('div');s.className='star';var sz=(Math.random()*2+.5).toFixed(1);s.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;--d:'+(Math.random()*3+2).toFixed(1)+'s;--dl:'+(-Math.random()*4).toFixed(1)+'s';bg.appendChild(s)}})();
+var MN=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+var sd=document.getElementById('iday'),sm=document.getElementById('imon'),sy=document.getElementById('iyr');
+for(var d=1;d<=31;d++)sd.add(new Option(d,('0'+d).slice(-2)));
+MN.forEach(function(m,i){sm.add(new Option(m,('0'+(i+1)).slice(-2)))});
+for(var y=2568;y>=2480;y--)sy.add(new Option(y,y));
+function upd(){
+  var d=sd.value,mo=sm.value,yr=sy.value;
+  for(var i=0;i<6;i++){var b=document.getElementById('b'+i);b.textContent='?';b.classList.remove('on')}
+  if(!d||!mo||!yr)return;
+  var digs=[d[0],d[1],mo[0],mo[1],String(yr)[2],String(yr)[3]];
+  digs.forEach(function(v,i){var b=document.getElementById('b'+i);b.textContent=v;setTimeout((function(bb){return function(){bb.classList.add('on')}})(b),i*80)});
+  chk();
+}
+function chk(){document.getElementById('gobtn').disabled=!(document.getElementById('iname').value.trim()&&document.getElementById('igender').value&&sd.value&&sm.value&&sy.value)}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function st(n){return'★'.repeat(n)+'☆'.repeat(5-n)}
+function lvl(){var r=Math.random();return r<.45?'good':r<.90?'mid':'bad'}
+function ageG(yr){var a=2568-parseInt(yr);return a<=14?'kid':a<=25?'teen':a<=50?'work':'elder'}
+var W={
+  good:{
+    open:['ช่วงนี้ดวงการงานของ {n} พุ่งสูงเหมือนจรวดที่เพิ่งจุดติด!','ดาวแห่งความสำเร็จกำลังส่องสว่างให้ {n} เป็นพิเศษช่วงนี้','บอสและเพื่อนร่วมงานต่างมองเห็นความสามารถของ {n} ชัดเจนขึ้นมากในช่วงนี้','โชคชะตาเปิดประตูโอกาสใหม่ให้ {n} แล้ว รีบก้าวเข้าไปได้เลย!','ผลงานของ {n} กำลังสร้างความประทับใจให้คนรอบข้างอย่างเงียบๆ'],
+    mid:['โปรเจกต์ที่ค้างคามานานมีแนวโน้มสำเร็จสวยงามในเร็ววัน','ไอเดียใหม่ๆ ผุดขึ้นในหัวของ {n} ไม่ขาดสาย ความคิดสร้างสรรค์อยู่ในโหมดสูงสุด','ทุกการเจรจาและต่อรองของ {n} มีโอกาสสำเร็จสูงมากกว่าปกติ','เพื่อนร่วมงานให้ความร่วมมือ บรรยากาศการทำงานดีเป็นพิเศษ','หัวหน้าอาจมอบความรับผิดชอบพิเศษให้ {n} ในไม่ช้านี้'],
+    money:['ด้านการเงินมีโอกาสรับเงินก้อนพิเศษ ไม่ว่าจะเป็นโบนัสหรือรายได้เสริม','รายได้ของ {n} มีแนวโน้มเพิ่มขึ้นจากช่องทางที่ไม่คาดคิด','ดีลหรือข้อเสนอทางการเงินที่ดีกำลังจะเข้ามาหา {n}','มีโอกาสได้รับทรัพย์จากบุคคลที่ไม่ได้คาดคิดไว้'],
+    close:['ขุนโชคแนะนำว่า {n} ควรรีบลงมือทำสิ่งที่วางแผนไว้ อย่าผัดวันประกันพรุ่ง!','ถ้า {n} มีแผนขอขึ้นเงินเดือนหรือเสนอไอเดียใหม่ — ช่วงนี้คือโอกาสทอง!','จงเชื่อมั่นในตัวเองและลงมือได้เลย {n} จักรวาลกำลังหนุนอยู่!']
+  },
+  mid:{
+    open:['{n} ช่วงนี้การงานเดินหน้าช้าๆ แต่มั่นคงดี','การงานของ {n} ในช่วงนี้สงบนิ่ง ไม่มีพายุใหญ่มาปั่นป่วน','{n} ช่วงนี้ทำงานได้อย่างสม่ำเสมอ ผลลัพธ์ค่อยๆ สะสมอยู่'],
+    mid:['ระวังการสื่อสารกับเพื่อนร่วมงานให้ชัดเจน ความเข้าใจผิดเล็กน้อยอาจสร้างปัญหาได้','ควรโฟกัสกับงานที่อยู่ตรงหน้าก่อน อย่ากังวลกับสิ่งที่ยังมาไม่ถึง','หมั่นพัฒนาทักษะใหม่ๆ ไว้ ดาวกำลังเตรียมเปิดทางใหม่ให้อยู่เงียบๆ'],
+    money:['ด้านการเงินควรประหยัดและวางแผนรายจ่ายให้รัดกุมหน่อย','ระวังการใช้จ่ายตามอารมณ์ โดยเฉพาะช้อปปิ้งออนไลน์ตอนดึก ขุนโชคเห็นหมดนะ!','รายรับและรายจ่ายพอๆ กัน ควรทำบัญชีให้ชัดเจนขึ้นหน่อย'],
+    close:['อดทนและทำงานสม่ำเสมอต่อไปนะ {n} ความพยายามไม่เคยทำร้ายใคร','รักษาความสัมพันธ์กับคนรอบข้างไว้ให้ดี เพราะนั่นคือทรัพย์ที่มีค่าที่สุด']
+  },
+  bad:{
+    open:['{n} ช่วงนี้การงานมีอุปสรรคเล็กน้อย ขอให้อดทนและใจเย็นไว้ก่อน','ช่วงนี้ {n} อาจรู้สึกว่างานไม่ค่อยไปไหน แต่นี่เป็นเพียงช่วงพักสะสมพลัง'],
+    mid:['อย่าตัดสินใจใหญ่ในช่วงนี้ ให้รอให้สถานการณ์ชัดเจนขึ้นก่อน','ระวังการสื่อสารที่อาจก่อให้เกิดความเข้าใจผิดกับหัวหน้าหรือเพื่อนร่วมงาน','ระวังคนที่มาขอยืมเงินหรือชวนทำธุรกิจด่วนๆ ในช่วงนี้'],
+    money:['ด้านการเงินต้องระวังมาก หลีกเลี่ยงการลงทุนที่ยังไม่แน่ใจ','เลื่อนการซื้อของใหญ่ๆ ออกไปก่อนได้ รอให้ดวงดีขึ้นจะดีกว่า'],
+    close:['อย่าหมดกำลังใจนะ {n} พายุทุกลูกมีวันสงบ โอกาสใหม่จะมาเอง','ขุนโชคเชื่อว่า {n} จะผ่านช่วงนี้ไปได้ แค่อย่ายอมแพ้ง่ายๆ']
+  }
+};
+var H={
+  good:{
+    open:['{n} สุขภาพช่วงนี้แข็งแรงเหมือนวัวกระทิง พลังงานล้นเหลือ!','ร่างกายของ {n} อยู่ในโหมดพีค! ทุกระบบทำงานสมบูรณ์แบบ','พลังชีวิตของ {n} ช่วงนี้เปล่งประกายออกมาให้เห็นได้ชัด'],
+    mid:['{n} กระปรี้กระเปร่า ตื่นสดชื่น หลับง่าย กินอร่อย ทุกอย่างราบรื่น','ความเครียดสะสมคลี่คลายลงมาก จิตใจของ {n} แจ่มใสกว่าที่ผ่านมา','ระบบภูมิคุ้มกันของ {n} แข็งแกร่ง เชื้อโรคไม่กล้าเข้าใกล้!'],
+    close:['เหมาะมากสำหรับการเริ่มออกกำลังกายหรือเพิ่มความเข้มข้นของการฝึก','ขุนโชคแนะนำให้ {n} ดูแลสุขภาพอย่างสม่ำเสมอแม้ในยามดวงดี','ลองออกไปทำกิจกรรมกลางแจ้งสักครั้ง {n} รับรองว่าจะรู้สึกดีมากขึ้น!']
+  },
+  mid:{
+  .btn:disabled{opacity:.3;cursor:not-allowed;box-shadow:none}
 .btn:not(:disabled):hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(218,165,32,.5)}
 .btn:not(:disabled):active{transform:scale(.98)}
 .res{display:none}
